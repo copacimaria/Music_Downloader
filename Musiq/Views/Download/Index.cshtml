@@ -1,0 +1,93 @@
+@model DownloadIndexViewModel
+@{
+    ViewData["Title"] = "Descărcare playlist";
+}
+
+<div class="dl-page">
+    <header class="dl-header">
+        <h1 class="dl-header__title">Descărcare playlist YouTube</h1>
+        <p class="dl-header__subtitle">
+            Lipește adresa playlistului și alege unde vrei să fie salvate melodiile.
+        </p>
+    </header>
+
+    <form asp-action="Start" method="post" class="dl-card dl-form">
+        @if (!Model.Tools.AllFound)
+        {
+            <p class="dl-alert dl-alert--warning">@Model.Tools.Message</p>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="dl-alert dl-alert--error"></div>
+
+        <div class="dl-field">
+            <label asp-for="Form.PlaylistUrl" class="dl-label"></label>
+            <input asp-for="Form.PlaylistUrl"
+                   class="dl-input"
+                   autocomplete="off"
+                   placeholder="https://www.youtube.com/playlist?list=..." />
+            <span asp-validation-for="Form.PlaylistUrl" class="dl-field__error"></span>
+        </div>
+
+        <div class="dl-field">
+            <label asp-for="Form.OutputFolder" class="dl-label"></label>
+            <input asp-for="Form.OutputFolder"
+                   class="dl-input"
+                   autocomplete="off"
+                   placeholder="D:\Muzică" />
+            <span asp-validation-for="Form.OutputFolder" class="dl-field__error"></span>
+            <small class="dl-field__hint">Cale absolută pe acest calculator. Folderul se creează dacă nu există.</small>
+        </div>
+
+        <div class="dl-field dl-field--narrow">
+            <label asp-for="Form.Format" class="dl-label"></label>
+            <select asp-for="Form.Format"
+                    class="dl-input dl-select"
+                    asp-items="Html.GetEnumSelectList<AudioFormat>()"></select>
+            <small class="dl-field__hint">MP3 e cel mai compatibil; FLAC păstrează calitatea maximă.</small>
+        </div>
+
+        <fieldset class="dl-fieldset">
+            <legend class="dl-label">Opțiuni</legend>
+
+            <div class="dl-check">
+                <input asp-for="Form.UsePlaylistSubfolder" class="dl-check__input" />
+                <label asp-for="Form.UsePlaylistSubfolder" class="dl-check__label"></label>
+            </div>
+
+            <div class="dl-check">
+                <input asp-for="Form.PrefixWithIndex" class="dl-check__input" />
+                <label asp-for="Form.PrefixWithIndex" class="dl-check__label"></label>
+            </div>
+        </fieldset>
+
+        <div class="dl-actions">
+            <button type="submit" class="dl-btn dl-btn--primary" disabled="@(!Model.Tools.AllFound)">
+                Începe descărcarea
+            </button>
+        </div>
+    </form>
+
+    @if (Model.RecentJobs.Count > 0)
+    {
+        <section class="dl-card dl-recent">
+            <h2 class="dl-recent__title">Descărcări recente</h2>
+
+            <ul class="dl-recent__list">
+                @foreach (var job in Model.RecentJobs)
+                {
+                    <li class="dl-recent__item">
+                        <a asp-action="Status"
+                           asp-route-id="@job.Id"
+                           class="dl-recent__link">@job.PlaylistTitle</a>
+
+                        <span class="dl-recent__count">@job.CompletedItems / @job.TotalItems</span>
+
+                        <span class="dl-badge dl-badge--@job.Status.ToString().ToLowerInvariant()">
+                            @job.Status.ToRomanian()
+                        </span>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+</div>

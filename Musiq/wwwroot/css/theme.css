@@ -1,0 +1,216 @@
+/* ==========================================================================
+   Musiq – Temă „techno dark”
+   Tokeni globali + chrome-ul aplicației (body, navbar, footer, scrollbar).
+   Componentele paginii de descărcare sunt în download.css.
+   ========================================================================== */
+
+:root {
+    /* --- Suprafețe -------------------------------------------------------- */
+    --mq-bg: #07080c;
+    --mq-bg-elev: #0d1016;
+    --mq-surface: #12151f;
+    --mq-surface-2: #171c28;
+    --mq-border: #232939;
+    --mq-border-strong: #333b50;
+
+    /* --- Text ------------------------------------------------------------- */
+    --mq-text: #e7eaf2;
+    --mq-text-dim: #8b93a8;
+    --mq-text-faint: #596274;
+
+    /* --- Accente ---------------------------------------------------------- */
+    --mq-cyan: #00e5ff;
+    --mq-cyan-dim: #0aa8bd;
+    --mq-magenta: #ff2d9b;
+    --mq-lime: #9dff3c;
+    --mq-amber: #ffb020;
+    --mq-red: #ff4d5e;
+
+    /* --- Efecte ----------------------------------------------------------- */
+    --mq-glow-cyan: 0 0 22px -6px rgba(0, 229, 255, 0.55);
+    --mq-glow-magenta: 0 0 22px -6px rgba(255, 45, 155, 0.5);
+    --mq-gradient: linear-gradient(90deg, var(--mq-cyan) 0%, var(--mq-magenta) 100%);
+
+    /* --- Formă ------------------------------------------------------------ */
+    --mq-radius: 10px;
+    --mq-radius-sm: 6px;
+
+    /* --- Tipografie ------------------------------------------------------- */
+    --mq-font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --mq-font-sans: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+    /* Suprascrieri Bootstrap, ca butoanele/linkurile native să nu iasă din temă. */
+    --bs-body-bg: var(--mq-bg);
+    --bs-body-color: var(--mq-text);
+    --bs-link-color: var(--mq-cyan);
+    --bs-link-hover-color: #6af1ff;
+    --bs-border-color: var(--mq-border);
+    --bs-emphasis-color: var(--mq-text);
+    --bs-secondary-color: var(--mq-text-dim);
+}
+
+/* --- Fundal -------------------------------------------------------------- */
+
+body {
+    background-color: var(--mq-bg);
+    color: var(--mq-text);
+    font-family: var(--mq-font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Grilă fină + două halouri de accent, fixate în spatele conținutului. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse 70% 50% at 15% -5%, rgba(0, 229, 255, 0.10), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 90% 5%, rgba(255, 45, 155, 0.09), transparent 70%),
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: auto, auto, 44px 44px, 44px 44px;
+}
+
+/* --- Selecție și focus --------------------------------------------------- */
+
+::selection {
+    background: rgba(0, 229, 255, 0.28);
+    color: #fff;
+}
+
+:focus-visible {
+    outline: 2px solid var(--mq-cyan);
+    outline-offset: 2px;
+}
+
+/* Neutralizează inelul alb de focus din site.css, care sare pe fundal închis. */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 229, 255, 0.3);
+}
+
+/* --- Navbar -------------------------------------------------------------- */
+
+.navbar {
+    background-color: rgba(10, 12, 18, 0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--mq-border);
+    box-shadow: none;
+}
+
+.navbar-brand {
+    font-family: var(--mq-font-mono);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--mq-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.navbar .nav-link {
+    position: relative;
+    font-family: var(--mq-font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--mq-text-dim);
+    transition: color 0.15s ease;
+}
+
+/* Tag helper-ul de layout adaugă text-dark; îl suprascriem explicit. */
+.navbar .nav-link.text-dark {
+    color: var(--mq-text-dim);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.text-dark:hover {
+    color: var(--mq-cyan);
+}
+
+/* Subliniere care crește dinspre stânga la hover. */
+.navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.2rem;
+    height: 1px;
+    background: var(--mq-cyan);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+}
+
+.navbar .nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+.navbar-toggler {
+    border-color: var(--mq-border-strong);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2300e5ff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* --- Footer -------------------------------------------------------------- */
+
+.footer {
+    background-color: rgba(10, 12, 18, 0.82);
+    border-top: 1px solid var(--mq-border) !important;
+    color: var(--mq-text-faint) !important;
+    font-family: var(--mq-font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+}
+
+.footer a {
+    color: var(--mq-text-dim);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: var(--mq-cyan);
+}
+
+/* --- Scrollbar ----------------------------------------------------------- */
+
+* {
+    scrollbar-color: var(--mq-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--mq-bg-elev);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--mq-border-strong);
+    border-radius: 999px;
+    border: 2px solid var(--mq-bg-elev);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--mq-cyan-dim);
+}
+
+/* --- Autofill ------------------------------------------------------------ */
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--mq-text);
+    -webkit-box-shadow: 0 0 0 100px var(--mq-surface-2) inset;
+    caret-color: var(--mq-text);
+}

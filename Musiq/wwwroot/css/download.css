@@ -1,0 +1,602 @@
+/* ==========================================================================
+   Musiq – Descărcare playlist (componente de pagină)
+   Consumă tokenii definiți în theme.css.
+   ========================================================================== */
+
+.dl-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 0 3rem;
+    color: var(--mq-text);
+}
+
+/* --- Antet --------------------------------------------------------------- */
+
+.dl-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+
+.dl-header__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--mq-font-mono);
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.dl-header__subtitle {
+    flex: 1 1 100%;
+    margin: 0;
+    color: var(--mq-text-dim);
+    font-size: 0.9rem;
+}
+
+/* Linie de accent deasupra titlului paginii. */
+.dl-header::before {
+    content: "";
+    flex: 1 1 100%;
+    height: 2px;
+    margin-bottom: 0.35rem;
+    background: var(--mq-gradient);
+    border-radius: 2px;
+    box-shadow: var(--mq-glow-cyan);
+}
+
+/* --- Card ---------------------------------------------------------------- */
+
+.dl-card {
+    position: relative;
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.028), transparent 45%),
+        var(--mq-surface);
+    border: 1px solid var(--mq-border);
+    border-radius: var(--mq-radius);
+    padding: 1.6rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+}
+
+/* --- Formular ------------------------------------------------------------ */
+
+.dl-form {
+    display: grid;
+    gap: 1.35rem;
+}
+
+.dl-field {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.dl-field--narrow {
+    max-width: 260px;
+}
+
+.dl-label {
+    font-family: var(--mq-font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--mq-text-dim);
+}
+
+.dl-input {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.9rem;
+    color: var(--mq-text);
+    background: var(--mq-bg-elev);
+    border: 1px solid var(--mq-border-strong);
+    border-radius: var(--mq-radius-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dl-input::placeholder {
+    color: var(--mq-text-faint);
+}
+
+.dl-input:hover {
+    border-color: #3f4860;
+}
+
+.dl-input:focus,
+.dl-input:focus-visible {
+    outline: none;
+    border-color: var(--mq-cyan);
+    box-shadow: var(--mq-glow-cyan), 0 0 0 1px var(--mq-cyan);
+}
+
+.dl-select {
+    appearance: none;
+    padding-right: 2.4rem;
+    cursor: pointer;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--mq-cyan) 50%),
+        linear-gradient(135deg, var(--mq-cyan) 50%, transparent 50%),
+        linear-gradient(160deg, rgba(255, 255, 255, 0.028), transparent 45%),
+        linear-gradient(var(--mq-bg-elev), var(--mq-bg-elev));
+    background-position: calc(100% - 19px) 55%, calc(100% - 13px) 55%, 0 0, 0 0;
+    background-size: 6px 6px, 6px 6px, auto, auto;
+    background-repeat: no-repeat;
+}
+
+/* Lista derulantă nativă se randează de sistem; forțăm culorile opțiunilor. */
+.dl-select option {
+    background: var(--mq-bg-elev);
+    color: var(--mq-text);
+}
+
+.dl-field__hint {
+    color: var(--mq-text-faint);
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.dl-field__error {
+    color: var(--mq-red);
+    font-family: var(--mq-font-mono);
+    font-size: 0.78rem;
+}
+
+.dl-field__error:empty {
+    display: none;
+}
+
+.dl-fieldset {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.dl-fieldset > .dl-label {
+    float: none;
+    width: auto;
+    padding: 0;
+    margin-bottom: 0.15rem;
+}
+
+.dl-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.dl-check__input {
+    flex: 0 0 auto;
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-top: 0.15rem;
+    accent-color: var(--mq-cyan);
+    background: var(--mq-bg-elev);
+    cursor: pointer;
+}
+
+.dl-check__label {
+    font-size: 0.89rem;
+    line-height: 1.4;
+    color: var(--mq-text);
+    cursor: pointer;
+}
+
+/* --- Butoane ------------------------------------------------------------- */
+
+.dl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dl-actions__form {
+    margin: 0;
+}
+
+.dl-btn {
+    display: inline-block;
+    padding: 0.7rem 1.4rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    color: var(--mq-text);
+    background: var(--mq-surface-2);
+    border: 1px solid var(--mq-border-strong);
+    border-radius: var(--mq-radius-sm);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease,
+                background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dl-btn:hover {
+    color: var(--mq-cyan);
+    border-color: var(--mq-cyan);
+    box-shadow: var(--mq-glow-cyan);
+}
+
+.dl-btn--primary {
+    color: #04121a;
+    background: var(--mq-gradient);
+    border-color: transparent;
+}
+
+.dl-btn--primary:hover {
+    color: #04121a;
+    border-color: transparent;
+    box-shadow: var(--mq-glow-cyan), var(--mq-glow-magenta);
+    filter: brightness(1.12);
+}
+
+.dl-btn--danger {
+    color: var(--mq-red);
+    border-color: rgba(255, 77, 94, 0.45);
+    background: rgba(255, 77, 94, 0.08);
+}
+
+.dl-btn--danger:hover {
+    color: #fff;
+    background: var(--mq-red);
+    border-color: var(--mq-red);
+    box-shadow: 0 0 22px -6px rgba(255, 77, 94, 0.6);
+}
+
+.dl-btn--ghost {
+    background: transparent;
+}
+
+.dl-btn:disabled,
+.dl-btn[disabled] {
+    color: var(--mq-text-faint);
+    background: var(--mq-surface-2);
+    border-color: var(--mq-border);
+    box-shadow: none;
+    filter: none;
+    cursor: not-allowed;
+}
+
+/* --- Progres ------------------------------------------------------------- */
+
+.dl-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.1rem;
+}
+
+.dl-progress__bar {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 12px;
+    appearance: none;
+    border: 1px solid var(--mq-border-strong);
+    border-radius: 999px;
+    background: var(--mq-bg-elev);
+    overflow: hidden;
+}
+
+.dl-progress__bar::-webkit-progress-bar {
+    background: var(--mq-bg-elev);
+    border-radius: 999px;
+}
+
+.dl-progress__bar::-webkit-progress-value {
+    background: var(--mq-gradient);
+    border-radius: 999px;
+    box-shadow: var(--mq-glow-cyan);
+    transition: inline-size 0.4s ease;
+}
+
+.dl-progress__bar::-moz-progress-bar {
+    background: var(--mq-gradient);
+    border-radius: 999px;
+}
+
+.dl-progress__value {
+    flex: 0 0 auto;
+    min-width: 4.5ch;
+    text-align: right;
+    font-family: var(--mq-font-mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--mq-cyan);
+}
+
+.dl-current {
+    margin: 0 0 1.1rem;
+    font-size: 0.88rem;
+    color: var(--mq-text-dim);
+    overflow-wrap: anywhere;
+}
+
+.dl-current strong {
+    color: var(--mq-text);
+    font-weight: 600;
+}
+
+.dl-current__percent {
+    margin-left: 0.4rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--mq-cyan-dim);
+}
+
+/* --- Mesaje -------------------------------------------------------------- */
+
+.dl-alert {
+    margin: 0 0 1.1rem;
+    padding: 0.75rem 0.95rem;
+    border-radius: var(--mq-radius-sm);
+    border-left: 3px solid transparent;
+    font-size: 0.88rem;
+}
+
+.dl-alert:empty,
+.dl-alert.validation-summary-valid {
+    display: none;
+}
+
+.dl-alert--error {
+    color: #ffc2c8;
+    background: rgba(255, 77, 94, 0.10);
+    border-left-color: var(--mq-red);
+}
+
+.dl-alert--success {
+    color: #d6ffb0;
+    background: rgba(157, 255, 60, 0.09);
+    border-left-color: var(--mq-lime);
+}
+
+.dl-alert--warning {
+    color: #ffe0a8;
+    background: rgba(255, 176, 32, 0.10);
+    border-left-color: var(--mq-amber);
+}
+
+.dl-alert ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+/* --- Metadate ------------------------------------------------------------ */
+
+.dl-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem 1.5rem;
+    margin: 0 0 1.6rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--mq-border);
+}
+
+.dl-meta__row--wide {
+    grid-column: 1 / -1;
+}
+
+.dl-meta__key {
+    margin: 0 0 0.25rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mq-text-faint);
+}
+
+.dl-meta__value {
+    margin: 0;
+    font-family: var(--mq-font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--mq-text);
+}
+
+.dl-meta__value--path {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--mq-text-dim);
+    overflow-wrap: anywhere;
+}
+
+/* --- Etichete de stare --------------------------------------------------- */
+
+.dl-badge {
+    display: inline-block;
+    flex: 0 0 auto;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--mq-border-strong);
+    font-family: var(--mq-font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--mq-surface-2);
+    color: var(--mq-text-dim);
+}
+
+.dl-badge--running {
+    color: var(--mq-cyan);
+    border-color: rgba(0, 229, 255, 0.45);
+    background: rgba(0, 229, 255, 0.09);
+    box-shadow: var(--mq-glow-cyan);
+    animation: dl-pulse 1.8s ease-in-out infinite;
+}
+
+.dl-badge--completed {
+    color: var(--mq-lime);
+    border-color: rgba(157, 255, 60, 0.4);
+    background: rgba(157, 255, 60, 0.09);
+}
+
+.dl-badge--failed {
+    color: var(--mq-red);
+    border-color: rgba(255, 77, 94, 0.45);
+    background: rgba(255, 77, 94, 0.1);
+}
+
+.dl-badge--cancelled {
+    color: var(--mq-amber);
+    border-color: rgba(255, 176, 32, 0.4);
+    background: rgba(255, 176, 32, 0.09);
+}
+
+@keyframes dl-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.62; }
+}
+
+/* --- Descărcări recente -------------------------------------------------- */
+
+.dl-recent__title {
+    margin: 0 0 1.1rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--mq-text-dim);
+}
+
+.dl-recent__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dl-recent__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--mq-border);
+}
+
+.dl-recent__item:first-child {
+    border-top: 0;
+}
+
+.dl-recent__link {
+    flex: 1 1 200px;
+    min-width: 0;
+    color: var(--mq-text);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: color 0.15s ease;
+}
+
+.dl-recent__link:hover {
+    color: var(--mq-cyan);
+}
+
+.dl-recent__count {
+    font-family: var(--mq-font-mono);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--mq-text-faint);
+}
+
+/* --- Jurnal -------------------------------------------------------------- */
+
+.dl-log {
+    padding: 0;
+    overflow: hidden;
+}
+
+.dl-log__summary {
+    padding: 1.1rem 1.6rem;
+    font-family: var(--mq-font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mq-text-dim);
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.dl-log__summary:hover {
+    color: var(--mq-cyan);
+}
+
+.dl-log__output {
+    margin: 0 1.6rem 1.35rem;
+    padding: 1rem;
+    max-height: 320px;
+    overflow: auto;
+    background: var(--mq-bg);
+    border: 1px solid var(--mq-border);
+    border-radius: var(--mq-radius-sm);
+    font-family: var(--mq-font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: #7f8ba1;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 576px) {
+    .dl-card {
+        padding: 1.2rem;
+    }
+
+    .dl-field--narrow {
+        max-width: none;
+    }
+
+    .dl-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dl-actions .dl-btn,
+    .dl-actions__form,
+    .dl-actions__form .dl-btn {
+        width: 100%;
+    }
+
+    .dl-log__summary {
+        padding: 1rem 1.2rem;
+    }
+
+    .dl-log__output {
+        margin: 0 1.2rem 1.1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dl-btn,
+    .dl-input,
+    .dl-recent__link,
+    .dl-log__summary,
+    .dl-progress__bar::-webkit-progress-value {
+        transition: none;
+    }
+
+    .dl-badge--running {
+        animation: none;
+    }
+}

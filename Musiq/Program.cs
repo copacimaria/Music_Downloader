@@ -1,6 +1,19 @@
+using Musiq.Models;
+using Musiq.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configurare unelte externe (yt-dlp / ffmpeg).
+builder.Services.Configure<YtDlpOptions>(builder.Configuration.GetSection(YtDlpOptions.SectionName));
+
+// Servicii de descărcare.
+builder.Services.AddSingleton<IToolLocator, ToolLocator>();
+builder.Services.AddSingleton<IDownloadJobStore, InMemoryDownloadJobStore>();
+builder.Services.AddSingleton<IDownloadQueue, DownloadQueue>();
+builder.Services.AddSingleton<IYtDlpService, YtDlpService>();
+builder.Services.AddSingleton<IPlaylistDownloadService, PlaylistDownloadService>();
+builder.Services.AddHostedService<DownloadWorker>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -22,8 +35,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Download}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

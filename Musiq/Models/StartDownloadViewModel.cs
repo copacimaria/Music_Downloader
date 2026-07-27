@@ -30,4 +30,6 @@ public class DownloadIndexViewModel
     public StartDownloadViewModel Form { get; set; } = new();
 
     public IReadOnlyList<DownloadJob> RecentJobs { get; set; } = Array.Empty<DownloadJob>();
+
+    public ToolAvailability Tools { get; set; } = ToolAvailability.Ok();
 }

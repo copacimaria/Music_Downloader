@@ -20,6 +20,14 @@ public class DownloadJob
 
     public AudioFormat Format { get; init; } = AudioFormat.Mp3;
 
+    /// <summary>Dacă numele fișierelor începe cu numărul de ordine din playlist.</summary>
+    public bool PrefixWithIndex { get; init; } = true;
+
+    /// <summary>Șablonul de nume de fișier trimis lui yt-dlp prin --output.</summary>
+    public string OutputTemplate => PrefixWithIndex
+        ? "%(playlist_index)02d - %(title)s.%(ext)s"
+        : "%(title)s.%(ext)s";
+
     public JobStatus Status { get; set; } = JobStatus.Pending;
 
     public int TotalItems { get; set; }

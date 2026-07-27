@@ -16,11 +16,16 @@ public class YtDlpService : IYtDlpService
     private const string ProgressMarker = "@@P@@";
 
     private readonly YtDlpOptions _options;
+    private readonly IToolLocator _toolLocator;
     private readonly ILogger<YtDlpService> _logger;
 
-    public YtDlpService(IOptions<YtDlpOptions> options, ILogger<YtDlpService> logger)
+    public YtDlpService(
+        IOptions<YtDlpOptions> options,
+        IToolLocator toolLocator,
+        ILogger<YtDlpService> logger)
     {
         _options = options.Value;
+        _toolLocator = toolLocator;
         _logger = logger;
     }
 
@@ -98,10 +103,12 @@ public class YtDlpService : IYtDlpService
             $"download:{ProgressMarker}|%(info.playlist_index)s|%(progress._percent_str)s|%(info.title)s"
         };
 
-        if (!string.IsNullOrWhiteSpace(_options.FfmpegPath))
+        var ffmpegDirectory = _toolLocator.ResolveFfmpegDirectory();
+
+        if (ffmpegDirectory is not null)
         {
             args.Add("--ffmpeg-location");
-            args.Add(_options.FfmpegPath);
+            args.Add(ffmpegDirectory);
         }
 
         args.Add(job.PlaylistUrl);
@@ -166,9 +173,13 @@ public class YtDlpService : IYtDlpService
         Action<string> onError,
         CancellationToken cancellationToken)
     {
+        // Aruncă ToolNotFoundException cu un mesaj explicit dacă yt-dlp lipsește.
+        var executable = _toolLocator.ResolveYtDlpPath();
+
         var startInfo = new ProcessStartInfo
         {
-            FileName = _options.YtDlpPath,
+            FileName = executable,
+            WorkingDirectory = Path.GetDirectoryName(executable) ?? string.Empty,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -204,13 +215,13 @@ public class YtDlpService : IYtDlpService
         {
             if (!process.Start())
             {
-                throw new InvalidOperationException($"Nu s-a putut porni procesul „{_options.YtDlpPath}”.");
+                throw new InvalidOperationException($"Nu s-a putut porni procesul „{executable}”.");
             }
         }
         catch (Exception ex) when (ex is not InvalidOperationException)
         {
             throw new InvalidOperationException(
-                $"yt-dlp nu a fost găsit la calea „{_options.YtDlpPath}”. Verifică setarea YtDlp:YtDlpPath.", ex);
+                $"Pornirea procesului „{executable}” a eșuat: {ex.Message}", ex);
         }
 
         process.BeginOutputReadLine();

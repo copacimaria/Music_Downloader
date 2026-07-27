@@ -1,0 +1,89 @@
+@model DownloadJob
+@{
+    ViewData["Title"] = $"Progres – {Model.PlaylistTitle}";
+    var statusClass = Model.Status.ToString().ToLowerInvariant();
+
+    var duration = Model.Duration;
+    var durationText = duration.TotalHours >= 1
+        ? $"{(int)duration.TotalHours}h {duration.Minutes}m {duration.Seconds}s"
+        : $"{duration.Minutes}m {duration.Seconds}s";
+}
+
+@section Head {
+    @if (!Model.IsFinished)
+    {
+        <meta http-equiv="refresh" content="2" />
+    }
+}
+
+<div class="dl-page">
+    <header class="dl-header">
+        <h1 class="dl-header__title">@Model.PlaylistTitle</h1>
+        <span class="dl-badge dl-badge--@statusClass">@Model.Status.ToRomanian()</span>
+    </header>
+
+    <section class="dl-card">
+        <div class="dl-progress">
+            <progress class="dl-progress__bar" value="@Model.OverallPercent" max="100">
+                @Model.OverallPercent%
+            </progress>
+            <span class="dl-progress__value">@Model.OverallPercent%</span>
+        </div>
+
+        @if (!Model.IsFinished && !string.IsNullOrEmpty(Model.CurrentItemTitle))
+        {
+            <p class="dl-current">
+                Se descarcă melodia @Model.CurrentIndex:
+                <strong>@Model.CurrentItemTitle</strong>
+                <span class="dl-current__percent">@Model.CurrentItemPercent.ToString("0.0")%</span>
+            </p>
+        }
+
+        @if (Model.Status == JobStatus.Completed)
+        {
+            <p class="dl-alert dl-alert--success">
+                Toate cele @Model.TotalItems melodii au fost descărcate.
+            </p>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <p class="dl-alert dl-alert--error">@Model.ErrorMessage</p>
+        }
+
+        <dl class="dl-meta">
+            <div class="dl-meta__row">
+                <dt class="dl-meta__key">Melodii</dt>
+                <dd class="dl-meta__value">@Model.CompletedItems / @Model.TotalItems</dd>
+            </div>
+            <div class="dl-meta__row">
+                <dt class="dl-meta__key">Format</dt>
+                <dd class="dl-meta__value">@Model.Format.ToString().ToUpperInvariant()</dd>
+            </div>
+            <div class="dl-meta__row">
+                <dt class="dl-meta__key">Durată</dt>
+                <dd class="dl-meta__value">@durationText</dd>
+            </div>
+            <div class="dl-meta__row dl-meta__row--wide">
+                <dt class="dl-meta__key">Folder</dt>
+                <dd class="dl-meta__value dl-meta__value--path">@Model.OutputFolder</dd>
+            </div>
+        </dl>
+
+        <div class="dl-actions">
+            @if (!Model.IsFinished)
+            {
+                <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="dl-actions__form">
+                    <button type="submit" class="dl-btn dl-btn--danger">Anulează</button>
+                </form>
+            }
+
+            <a asp-action="Index" class="dl-btn dl-btn--ghost">Înapoi la formular</a>
+        </div>
+    </section>
+
+    <details class="dl-card dl-log">
+        <summary class="dl-log__summary">Jurnal yt-dlp</summary>
+        <pre class="dl-log__output">@string.Join(Environment.NewLine, Model.GetLog())</pre>
+    </details>
+</div>
